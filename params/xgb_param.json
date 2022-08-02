@@ -1,0 +1,5 @@
+{
+    "objective": "multi:softmax",
+    "learning_rate": 0.5,
+    "num_class": 3
+}
