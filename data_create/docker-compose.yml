@@ -1,0 +1,11 @@
+version: "3"
+services:
+    datascience-notebook:
+        image: jupyter/datascience-notebook:latest
+        volumes: 
+            - ./:/home/jovyan/work
+        ports:
+            - 8888:8888
+        container_name: datascience-notebook-container-data-create
+        environment:
+            - JUPYTER_ENABLE_LAB=yes

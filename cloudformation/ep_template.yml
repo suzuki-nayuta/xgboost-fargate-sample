@@ -1,0 +1,101 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Create VPC Endpoint for private ECS Task
+
+Parameters:
+  TargetVPCId:
+    Type: "String"
+    Description: "VPC ID for VPC Endpoint."
+  Subnet1:
+    Type: "String"
+    Description: "First Subnet for VPC Endpoint."
+  Subnet2:
+    Type: "String"
+    Description: "Second Subnet for VPC Endpoint."
+  RouteTable1:
+    Type: "String"
+    Description: "First RouteTable for VPC Endpoint."
+  RouteTable2:
+    Type: "String"
+    Description: "Second RouteTable for VPC Endpoint."
+  MySecurityGroup:
+    Type: "String"
+    Description: "SecurityGroup for VPC Endpoint."
+  
+
+Resources:
+  ########################################################
+  ### VPCEndpoint
+  ########################################################
+  cwlInterfaceEndpoint:
+    Type: 'AWS::EC2::VPCEndpoint'
+    Properties:
+      VpcEndpointType: Interface
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.logs'
+      VpcId: !Ref TargetVPCId
+      PrivateDnsEnabled: True
+      SubnetIds: 
+        - !Ref Subnet1
+        - !Ref Subnet2
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
+
+  ecrRkrInterfaceEndpoint:
+    Type: 'AWS::EC2::VPCEndpoint'
+    Properties:
+      VpcEndpointType: Interface
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.ecr.dkr'
+      VpcId: !Ref TargetVPCId
+      PrivateDnsEnabled: True
+      SubnetIds: 
+        - !Ref Subnet1
+        - !Ref Subnet2
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
+
+  ecrApiInterfaceEndpoint:
+    Type: 'AWS::EC2::VPCEndpoint'
+    Properties:
+      VpcEndpointType: Interface
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.ecr.api'
+      VpcId: !Ref TargetVPCId
+      PrivateDnsEnabled: True
+      SubnetIds: 
+        - !Ref Subnet1
+        - !Ref Subnet2
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
+
+  s3GatewayEndpoint:
+    Type: 'AWS::EC2::VPCEndpoint'
+    Properties:
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.s3'
+      VpcId: !Ref TargetVPCId
+      RouteTableIds: 
+        - !Ref RouteTable1
+        - !Ref RouteTable2
+
+  athenaInterfaceEndpoint:
+    Type: 'AWS::EC2::VPCEndpoint'
+    Properties:
+      VpcEndpointType: Interface
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.athena'
+      VpcId: !Ref TargetVPCId
+      PrivateDnsEnabled: True
+      SubnetIds: 
+        - !Ref Subnet1
+        - !Ref Subnet2
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
+
+  ecsInterfaceEndpoint:
+    Type: 'AWS::EC2::VPCEndpoint'
+    Properties:
+      VpcEndpointType: Interface
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.ecs'
+      VpcId: !Ref TargetVPCId
+      PrivateDnsEnabled: True
+      SubnetIds: 
+        - !Ref Subnet1
+        - !Ref Subnet2
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
